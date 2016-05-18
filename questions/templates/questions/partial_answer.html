@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load humanize %}
+
+<div class="row answer" answer-id="{{ answer.id }}">
+  {% csrf_token %}
+  <div class="col-md-1 options">
+    <span class="glyphicon glyphicon-chevron-up vote up-vote{% if user in answer.get_up_voters %} voted{% endif %}" title="{% trans '这个答案不错哟.' %}"></span>
+    <span class="votes">{{ answer.votes }}</span>
+    <span class="glyphicon glyphicon-chevron-down vote down-vote{% if user in answer.get_down_voters %} voted{% endif %}" title="{% trans '这个答案很垃圾.' %}"></span>
+    {% if answer.is_accepted and user == question.user %}
+      <span class="glyphicon glyphicon-ok accept accepted" title="{% trans '不接受该答案' %}"></span>
+    {% elif answer.is_accepted %}
+      <span class="glyphicon glyphicon-ok accept accepted" style="cursor: default"></span>
+    {% elif user == question.user %}
+      <span class="glyphicon glyphicon-ok accept" title="{% trans '采纳该答案.' %}"></span>
+    {% endif %}
+  </div>
+  <div class="col-md-11">
+    <div class="answer-user">
+      <a href="#"><img src="{{ answer.user.webuser.get_picture }}" class="media-object img-circle" style='max-width:40px;'></a>
+      <a href="#" class="username">{{ answer.user.webuser.get_screen_name }}</a>
+      <small class="answered">{% trans "在" %} {{ answer.create_date|naturaltime }}{% trans "回答" %}</small>
+    </div>
+    <div class="answer-description">
+      {{ answer.get_answercontent_as_markdown|safe }}
+    </div>
+  </div>
+</div>
+<hr>

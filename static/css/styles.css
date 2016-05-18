@@ -1,0 +1,51 @@
+
+img {
+    width: 100%;
+}
+
+.navbar-inverse input[type="text"] {
+    background: #313131;
+    border: none;
+    color: #999;
+}
+
+.navbar-inverse .navbar-form {
+    position: relative;
+}
+
+.navbar-inverse button[type="submit"] {
+    position: absolute;
+    top: 25%;
+    right: 20px;
+    background: none;
+    border: none;
+}
+
+@media(min-width: 768px) {
+    .navbar-inverse button[type="submit"] {
+        top: 15%;
+    }
+}
+
+.navbar-inverse .glyphicon {
+    color: #999;
+}
+
+.profile {
+    margin-right: 25px;
+}
+
+.footer{
+    position:fixed;
+    bottom:0px;
+    z-index:99px;
+    background:#000000;
+    }
+
+.sider-movie{
+    background-color: #CCC;
+    width: 139px;
+    overflow:hidden;
+    text-overflow:ellipsis;/*文字溢出的部分隐藏并用省略号代替*/
+    white-space:nowrap;/*文本不自动换行*/
+ }

@@ -1,0 +1,42 @@
+{% extends "base.html"%}
+{% block title%} 个人主页 {% endblock%}
+
+
+{% block page_content %}
+    <!--主题内容-->
+        <div id="mainbody">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-3">
+                <div class="sidebar">
+                <div class="list-group">
+                    <a class="list-group-item selected" href="{% url 'settings' %}">个人资料</a>
+                    <a class="list-group-item selected" href="{% url 'picture' %}">上传头像</a>
+                    <a class="list-group-item selected" href="">历史记录</a>
+                    <a class="list-group-item selected" href="#">我的收藏</a>
+                    <a class="list-group-item selected" href="{% url 'addmovie' %}">添加电影</a>
+                    <a class="list-group-item selected" href="#"> 我的添加</a>
+                    <a class="list-group-item selected" href="#">关于我们</a>
+                    <a class="list-group-item selected" href="#">意见反馈</a>
+                </div>
+                </div>
+            </div>
+
+                <!--显示左边菜单点击后的内容-->
+                <div class="col-md-9">
+                    <div class="container">
+                    {%block person_home_content%}
+                        <!--显示个人主页中间主要内容-->
+                        <!--end-->
+                    {%endblock%}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+            </div>
+    <!--主题内容结束-->
+
+
+{% endblock%}

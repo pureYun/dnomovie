@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}登录后跳转页面个人资料{% endblock %}
+
+{% block page_content %}
+    <div class="jumbotron">
+        <h3>您好,{{user.username}},你是我们网站的第{{user.id}}个用户.</h3>
+        <p>登录后，我们不再推荐已看完的电影，但是你可以在历史记录中重温.</p>
+        <p>完善资料后，我们可以为你提供更好的推荐电影服务.</p>
+        <p><a class="btn btn-primary btn-lg" href="{% url 'settings' %}" role="button">完善资料</a></p>
+    </div>
+{% endblock %}

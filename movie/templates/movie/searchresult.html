@@ -1,0 +1,223 @@
+{% extends "base.html"%}
+{% load staticfiles %}
+{% load i18n %}
+{% load static %}
+{% block title%}电影搜索结果{% endblock %}
+ {% block head %}
+<link href="{% static 'css/index.css' %}" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
+ <script src="{% static 'js/movies.js' %}"></script>
+    {% endblock %}
+
+
+
+ {% block page_content %}
+
+
+ <!--主体内容 -->
+    <div id="mainbody" class="moviebody">
+         <div class="container">
+            <div class="row">
+                 <div class="col-md-2">
+                      <div class="sidebar">
+                        <div class="sidebar_cell">
+                            <div class="sidebar_cell_title">类型</div>
+                            <div class="sidebar_cell_list">
+                                <a href="#">全部</a>
+                                <a href="?filtertype=style&filterparam=剧情">剧情</a>
+                                <a href="?filtertype=style&filterparam=动作">动作</a>
+                                <a href="?filtertype=style&filterparam=爱情">爱情</a>
+                                <a href="?filtertype=style&filterparam=喜剧">喜剧</a>
+                                <a href="?filtertype=style&filterparam=幻">科幻</a>
+                                <a href="?filtertype=style&filterparam=悬疑">悬疑</a>
+                                <a href="?filtertype=style&filterparam=恐怖">恐怖</a>
+                                <a href="?filtertype=style&filterparam=犯罪">犯罪</a>
+                                <a href="?filtertype=style&filterparam=动画">动画</a>
+                                <a href="?filtertype=style&filterparam=其他">其他</a>
+                            </div>
+                        </div>
+                        <div class="sidebar_cell">
+                            <div class="sidebar_cell_title">地区</div>
+                            <div class="sidebar_cell_list">
+                                <a href="?filtertype=area&filterparam=中国">内地</a>
+                                <a href="?filtertype=area&filterparam=香港">香港</a>
+                                <a href="?filtertype=area&filterparam=美国">美国</a>
+                                <a href="?filtertype=area&filterparam=日本">日本</a>
+                                <a href="?filtertype=area&filterparam=韩国">韩国</a>
+                                <a href="?filtertype=area&filterparam=美国">美国</a>
+                                <a href="?filtertype=area&filterparam=英国">英国</a>
+                                <a href="?filtertype=area&filterparam=德">德国</a>
+                                <a href="?filtertype=area&filterparam=法国">法国</a>
+                                <a href="?filtertype=area&filterparam=泰国">泰国</a>
+                                <a href="?filtertype=area&filterparam=印度">印度</a>
+                                <a href="?filtertype=area&filterparam=其他">其他</a>
+                            </div>
+                        </div>
+                        <div class="sidebar_cell">
+                            <div class="sidebar_cell_title">时间</div>
+                            <div class="sidebar_cell_list">
+                                <a href="#">不限</a>
+                                <a href="?filtertype=year&filterparam=2015">2015</a>
+                                <a href="?filtertype=year&filterparam=2014">2014</a>
+                                <a href="?filtertype=year&filterparam=2013">2013</a>
+                                <a href="?filtertype=year&filterparam=2012">2012</a>
+                                <a href="?filtertype=year&filterparam=2011">2011</a>
+                                <a href="?filtertype=year&filterparam=2011">2010</a>
+                                <a href="?filtertype=year&filterparam=2011">2009</a>
+                                <a href="?filtertype=year&filterparam=2011">2008</a>
+                                <a href="?filtertype=year&filterparam=2011">2007</a>
+                                <a href="?filtertype=year&filterparam=2011">2006</a>
+                                <a href="?filtertype=year&filterparam=2011">2005</a>
+                                <a href="?filtertype=year&filterparam=2011">2004</a>
+                                <a href="?filtertype=year&filterparam=2011">2003</a>
+                                <a href="?filtertype=year&filterparam=2011">2002</a>
+                                <a href="?filtertype=year&filterparam=20">其他</a>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+
+
+
+                <div class="col-md-8">
+                    <div class="movieList">
+                        <ul class="movieList_tab">
+                            <li class="current">推荐</li>
+                            <li>最新</li>
+                            <li>最热</li>
+                        </ul>
+
+
+                        <ul class="movieTab_con">
+                            <!--选项卡切换之最新-->
+                            <li class="current">
+                               <div class="movieList_con row">
+                                    {% for movie in movielist %}
+                                    <div class="col-md-4">
+                                      <div class="movieList_con_cell">
+                                        <div class="movieList_con_cell_info thumbnail">
+                                            <div class="post-thumbnail">
+                                            <a href="#" class="inimg" target="_blank" title="{{movie.moviename}}">
+                                                <img src="/media/img/{{movie.image}}" alt="{{movie.moviename}}"/>
+
+                                            </a>
+                                                <div class="img_title" style="display:none">
+                                                    <small class="imdbscore">{{movie.country}}</small>
+                                                    <small class="imdbscore">{{movie.dateyear}}</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="caption movie-info">
+                                                <ul class="title"><a href="http://www.baidu.com">{{movie.moviename}}</a></ul>
+                                                <ul>
+                                                {% if movie.movieaddress%}
+                                                <a href="{{movie.movieaddress}}" target="_blank" class="btn btn-primary btn-sm btn-movie" role="button" id="{{movie.id}}">播放</a>
+                                                {% endif %}
+                                                {% if movie.downloadlink%}
+                                                <a href="{{movie.downloadlink}}" target="_blank"  class="btn btn-primary btn-sm" role="button">下载</a>
+                                                {% endif %}
+                                                </ul>
+                                                <ul class="others">
+                                                    <li class="in_category">{% ifequal movie.country ''%}top250{% endifequal %}{{movie.country}}</li>
+                                                    <li class="play">
+                                                        <span class="wpfp-span">{{movie.doubancounter}}</span>
+                                                    </li>
+                                                    <li class="score">
+                                                        <span class="">{{movie.doubanscore}}</span>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+                                      </div>
+                                    </div>
+                                   {% endfor %}
+                            </div>
+
+
+                            </li>
+
+
+
+
+                            <!--选项卡切换之最热-->
+                            <li>
+
+
+                            </li>
+
+                            <!--最新电影结束-->
+
+                        </ul>
+
+                      <!--分页符开始-->
+                        <nav class="movieList_page">
+                                                               {% if movielist.has_previous %}
+                                    <a href="?page={{ movielist.previous_page_number }}&filtertype={{filtertype}}&filterparam={{filterparam}}" title="下一页">上一页</a>&nbsp;
+                                    {% endif %}
+                                    {% for p in page_range %}
+                                    {% ifequal p movielist.number %}
+                                    <span>{{p}}</span>
+                                    {% else %}
+                                    <a href="?page={{p}}&filtertype={{filtertype}}&filterparam={{filterparam}}" title="第{{p}}页">{{p}}</a>
+                                    {% endifequal %}
+                                    {% endfor %}
+
+                                    {% if movielist.has_next %}
+                                    <a href="?page={{ movielist.next_page_number }}&filtertype={{filtertype}}&filterparam={{filterparam}}" title="下一页">下一页</a>;
+                                    {% endif %}
+                        </nav>
+                        <!--分页符结束-->
+                    </div>
+             </div>
+
+
+
+                <!--排行榜开始-->
+                 <div class="col-md-2">
+                    <div class="rankBar">
+                        <h5 class="rankBar_title">
+                            热播(手机观看)
+                        </h5>
+                        <ul class="rankBar_list">
+                            <li><a target="_blank" href="http://t.cn/RGGWv4A">美人鱼</a></li>
+                            <li><a target="_blank" href="http://t.cn/RbFx2ih">功夫熊猫3</a></li>
+                            <li><a target="_blank" href="http://t.cn/RGGWJ9D">叶问3</a></li>
+                            <li><a target="_blank" href="http://t.cn/RGGWv4w">西游记之三打白骨精</a></li>
+                            <li><a target="_blank" href="http://t.cn/RbFMw73">星球大战7</a></li>
+                            <li><a target="_blank" href="http://t.cn/RbFMw7T">唐人街探案</a></li>
+                        </ul>
+                    </div>
+                    <div class="rankBar">
+                        <h5 class="rankBar_title">
+                            IMDB排行榜
+                        </h5>
+                        <ul class="rankBar_list">
+                            {% for sidemovie in imdbmovie_list %}
+                            <li class="sider-movie"><a href="{{sidemovie.movieaddress}}" target="_blank" >{{sidemovie.moviename}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="rankBar">
+                        <h5 class="rankBar_title">
+                            美剧排行榜
+                        </h5>
+                        <ul class="rankBar_list">
+                            {% for usamovie in usamovie_list %}
+                            <li class="sider-movie"><a href="{{usamovie.movieaddress}}" target="_blank">{{usamovie.moviename}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                 </div>
+                 <!--排行榜结束-->
+            </div>
+        </div>
+     </div>
+    <!--主体内容结束-->
+
+{% endblock %}
+
+{% block allfilms %}
+
+{% endblock %}

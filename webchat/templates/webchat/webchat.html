@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load static %}
+{% block title %}在线聊天{% endblock %}
+{%block head%}
+ <link href="{% static 'css/webchat.css' %}" rel="stylesheet">
+    <script type="text/javascript">
+    //load all contact
+        GLOBAL_SESSION_CACHE={
+        'single':{},
+        'group':{},
+        };
+        $(document).ready(function(){
+
+        //loadcontacts
+        LoadContacts();
+        //每隔3s执行函数
+        getNewMsgs();
+
+    $(".chat-msg-sendbox").delegate('input','keydown',function(e){
+    if(e.which ==13){
+    var msg_text = $("#input-msg").val();
+    if($.trim(msg_text).length>0){
+    SendMsg(msg_text);
+
+    }
+    AddSentMsgIntoBox(msg_text);
+    $("#input-msg").val('');
+    }
+    });//end delegate
+});//end document ready
+
+function AddSentMsgIntoBox(msg_text){
+    var d = new Date();
+    var send_time = d.toLocaleString()
+    var number = Math.floor((Math.random()*10)+1)
+    var msg_ele = "<li class='media'><div class='media-body sent-message'><div class='media'>"+
+        "<a class='pull-right' href='#'> <img class='media-object img-circle' src='/static/img/"+number+".png'/></a>"+
+        "<div class='media-body'>"+msg_text+"<br/><small class='text-muted'>"+"{{user.username}}"+"&nbsp;|&nbsp;"+ send_time+"</small><hr/></div></div></div></li>"
+    $(".chat-content").append(msg_ele)
+    $(".chat-content-div").animate({
+    scrollTop:$('.chat-content-div')[0].scrollHeight},530
+    );
+}
+
+function LoadContacts(){
+    $.get("{% url 'load_contact_list'%}",function(callback){
+        var data = JSON.parse(callback);
+        $.each(data.contact_list,function(index,ele){
+            var ele ="<li class='media' onclick='OpenDialogBox(this);' contact_id='"+ele.id+"' contact_type='single' contact_name='"+ele.user__username+"'> <div class='media-body'> <div class='media'>"+
+                       "<a class='pull-left' href='#' contact_id='"+ele.id+"' contact_type='single' contact_name='"+ele.user__username+"'> <img class='media-object img-circle' style='max-width:40px;' src='"+ele.pictures+"'/>  </a>"+
+                     "<div class='media-body' > <h5>"+ele.user__username +"| 普通用户 </h5><small class='text-muted'>Active From 3 hours</small>"+
+                       "<span class='badge pull-right'>0</span></div> </div></div></li><hr>"
+        $(".contact-list").append(ele)
+        });//end each
+    });//end get
+    }
+
+function OpenDialogBox(ele){
+     var contact_id = $(ele).attr('contact_id');
+     var contact_type = $(ele).attr('contact_type');
+     var contact_name = $(ele).attr('contact_name');
+     //dump current session contact
+     DumpSession()
+     var newheader = "<span contact_id='"+contact_id+"'"+"contact_type='"+contact_type+"'>正在与"+contact_name+"聊天</span>";
+     $(".chat-header").html(newheader)
+     console.log(contact_type);
+     $(".chat-content").html(LoadSession(contact_id,contact_type))
+
+     //clear the unread msg num flags
+     var unread_msg_num = $(ele).find("span")[0];
+     $(unread_msg_num).text(0);
+     $(unread_msg_num).addClass("hidden");
+}
+
+function LoadSession(contact_id,contact_type){
+    if(GLOBAL_SESSION_CACHE[contact_type].hasOwnProperty(contact_id)){
+    var session_html =GLOBAL_SESSION_CACHE[contact_type][contact_id]
+    }
+    else{
+    var session_html ='';
+    }
+    return session_html
+     <!--$(".chat-content").html(session_html)-->
+    }
+
+function DumpSession(){
+    var current_open_session_id = $(".chat-header span").attr("contact_id");
+    var current_open_session_type = $(".chat-header span").attr("contact_type");
+    console.log("current_open_session_id"+current_open_session_id);
+    if(current_open_session_id){
+    GLOBAL_SESSION_CACHE[current_open_session_type][current_open_session_id]=$(".chat-content").html();
+    }
+}
+function SendMsg(msg_text){
+    var contact_id=$(".chat-header span").attr("contact_id");
+    var contact_type=$(".chat-header span").attr("contact_type");
+
+    var msg_dic={
+    'contact_type':contact_type,
+    'to':contact_id,
+    'from':"{{user.webuser.id}}",
+    'from_name':"{{user.username}}",
+    'msg':msg_text
+    }
+    $.post("{% url 'send_msg'%}",{'data':JSON.stringify(msg_dic),'csrfmiddlewaretoken':GetCsrfToken()},function(callback){
+        console.log(callback);
+    });//end post
+    }
+
+function GetCsrfToken(){
+    return $("input[name='csrfmiddlewaretoken']").val();
+    }
+
+function getNewMsgs(){
+    $.get("{% url 'get_new_msgs'%}",function(callback){
+        console.log("New Message:"+callback);
+        var msg_list = JSON.parse(callback);
+        var current_open_session_id = $(".chat-header span").attr("contact_id");
+        var current_open_session_type = $(".chat-header span").attr("contact_type");
+        $.each(msg_list,function(index,msg_item){
+            console.log(msg_item.contact_type)
+            if(msg_item.contact_type==current_open_session_type){
+                if(msg_item.from==current_open_session_id){
+                    AddRecvMsgToChatBox(msg_item)
+                }
+                <!--表示当前session没有被打开-->
+                else{
+                     var old_session_content = LoadSession(msg_item.from,msg_item.contact_type);
+                     var new_msg_ele = GenerateNewMsg(msg_item);
+                     new_session_content =old_session_content+new_msg_ele;
+                     DumpSession2(msg_item.from,msg_item.contact_type,new_session_content);
+                     console.log("kaishi zhixing update........");
+                     UpdateUnreadMsgNums(msg_item.from,msg_item.contact_type);
+                }
+            }
+
+
+        });//end each
+
+         //start a new request
+         console.log("=====run again");
+         getNewMsgs();
+
+    });//end get
+    }
+//更新维度消息条数
+function UpdateUnreadMsgNums(contact_id,contact_type){
+    console.log("contact_id:"+contact_id);
+    var msg_num_ele =$(".contact-list li[contact_id='"+contact_id+"']").find("span")[0];
+
+    $(msg_num_ele).text(parseInt($(msg_num_ele).text())+1)
+    $(msg_num_ele).removeClass("hidden");
+
+}
+
+function DumpSession2(contact_id,contact_type,content){
+    if(contact_id){
+        GLOBAL_SESSION_CACHE[contact_type][contact_id]=content;
+    }
+    }
+
+function AddRecvMsgToChatBox(msg_item){
+    var number = Math.floor((Math.random()*10)+1)
+    var msg_ele = "<li class='media'><div class='media-body'><div class='media'>"+
+        "<a class='pull-left' href='#'> <img class='media-object img-circle' src='/static/img/"+number+".png'/></a>"+
+        "<div class='media-body'>"+msg_item['msg']+"<br/><small class='text-muted'>"+msg_item['from_name']+"&nbsp;|&nbsp;"+ msg_item['timestamp']+"</small><hr/></div></div></div></li>"
+    $(".chat-content").append(msg_ele)
+    $(".chat-content-div").animate({
+    scrollTop:$('.chat-content-div')[0].scrollHeight},530
+    );
+
+}
+function GenerateNewMsg(msg_item){
+    var number = Math.floor((Math.random()*10)+1)
+    var msg_ele = "<li class='media'><div class='media-body'><div class='media'>"+
+        "<a class='pull-left' href='#'> <img class='media-object img-circle' src='/static/img/"+number+".png'/></a>"+
+        "<div class='media-body'>"+msg_item['msg']+"<br/><small class='text-muted'>"+msg_item['from_name']+"&nbsp;|&nbsp;"+ msg_item['timestamp']+"</small><hr/></div></div></div></li>"
+    return msg_ele;
+}
+    </script>
+
+{% endblock %}
+{% block page_content %}
+
+    <div id="mainbody">
+         <div class="container chat-container">
+             {% csrf_token %}
+            <!--<h1 class="page-header"><small>聊天界面{% csrf_token %}</small></h1>-->
+            <div class="row" style="padding-top:10px;">
+
+                  <!-- Nav tabs start-->
+                <div>
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#person" aria-controls="person" role="tab" data-toggle="tab">联系人</a></li>
+    <li role="presentation"><a href="#group" aria-controls="group" role="tab" data-toggle="tab">群组</a></li>
+    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">通知</a></li>
+    <li role="presentation"><a href="#shares" aria-controls="shares" role="tab" data-toggle="tab">分享</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="person">
+         <div class="col-md-8 chat-box">
+        <div class="panel panel-info">
+            <div class="panel-heading chat-header">
+
+            </div>
+            <div class="panel-body chat-content-div">
+                <ul class="media-list chat-content">
+
+                </ul>
+            </div>
+            <div class="panel-footer chat-msg-sendbox">
+                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="输入消息" id="input-msg"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-info" type="button">发送</button>
+                                    </span>
+                                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+          <div class="panel panel-primary contact-list-box">
+            <div class="panel-heading">
+              在线用户
+            </div>
+            <div class="panel-body contact-list-div">
+                <ul class="media-list contact-list">
+
+                                    <!--<li class="media">-->
+
+                                        <!--<div class="media-body">-->
+
+                                            <!--<div class="media">-->
+                                                <!--<a class="pull-left" href="#">-->
+                                                    <!--<img class="media-object img-circle" style="max-height:40px;" src="/static/img/user.png" />-->
+                                                <!--</a>-->
+                                                <!--<div class="media-body" >-->
+                                                    <!--<h5>Alex Deo | User </h5>-->
+
+                                                   <!--<small class="text-muted">Active From 3 hours</small>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+
+                                        <!--</div>-->
+                                    <!--</li>-->
+
+                                </ul>
+                </div>
+            </div>
+
+    </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="group">group</div>
+    <div role="tabpanel" class="tab-pane" id="messages">messages</div>
+    <div role="tabpanel" class="tab-pane" id="shares">shares</div>
+  </div>
+
+</div><!--end tab-->
+
+
+
+</div>
+
+    </div>
+        </div>
+    <!--主体内容结束-->
+
+{% endblock %}

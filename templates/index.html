@@ -1,0 +1,54 @@
+{% extends 'base.html'%}
+{% block title%} 首页 {% endblock %}
+
+ {% block slideshow %}
+
+  <!-- 轮播图-->
+    <div class="carousel slide" id="slideshow" data-interval="1000" data-pause="false" data-wrap="false">
+
+            <ol class="carousel-indicators">
+                <li data-target="#slideshow" data-slide-to="0" class="active"></li>
+                <li data-target="#slideshow" data-slide-to="1"></li>
+                <li data-target="#slideshow" data-slide-to="2"></li>
+            </ol>
+
+            <div class="carousel-inner">
+
+                <div class="item active">
+                    <img src="../static/images/01.jpg" alt="First slide">
+                    <div class="carousel-caption">
+                        <h2>没什么可看</h2>
+                        <p>没什么可看了，因为我都看过了，你还不看看？</p>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <img src="../static/images/02.jpg" alt="Seconde slide">
+                    <div class="carousel-caption">
+                        <h2>真没什么</h2>
+                        <p>最好的也就这样了，其他，真没什么，不信你看</p>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <img src="../static/images/01.jpg" alt="Third slide">
+                    <div class="carousel-caption">
+                        <h2>真没什么</h2>
+                        <p>最好的也就这样了，其他，真没什么，不信你看</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <a href="#slideshow" data-slide="prev" class="left carousel-control">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a href="#slideshow" data-slide="next" class="right carousel-control">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+
+    </div>
+    <!--轮播图结束-->
+
+{% endblock %}
+

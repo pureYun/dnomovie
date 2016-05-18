@@ -1,0 +1,14 @@
+Django==1.8.2
+Markdown==2.6.2
+MarkupSafe==0.23
+MySQL-python==1.2.5
+Pillow==2.3.0
+Unidecode==0.04.14
+Unipath==1.1
+decorator==3.4.0
+django-adminfiles==1.0.1
+django-cleanup==0.3.1
+django-haystack==2.4.0
+django-markdown==0.8.4
+django-pygments==0.1
+django-templateaddons==0.1

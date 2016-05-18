@@ -1,0 +1,56 @@
+html{font-size: 62.5%;}
+body {
+    padding-top: 50px;  
+}
+
+img {
+    width: 100%;
+}
+
+#mainbody{padding-top:20px;margin-bottom:100px;}
+
+.navbar-inverse input[type="text"] {
+    background: #fff;
+    border: none;
+    color: #999;
+}
+
+.navbar-inverse .navbar-form {
+    position: relative;
+}
+
+.navbar-inverse button[type="submit"] {
+    position: absolute;
+    top: 25%;
+    right: 20px;
+    background: none;
+    border: none;
+}
+
+@media(min-width: 768px) {
+    .navbar-inverse button[type="submit"] {
+        top: 15%;
+    }
+}
+
+.navbar-inverse .glyphicon {
+    color: #999;
+}
+
+.profile {
+    margin-right: 25px;
+}
+
+#footer {width: 100%; padding:10px 0;background: #2c3038;color: #fff;font-size: 1.6rem;line-height: 2rem;position: fixed;bottom: 0;z-index:100px;}
+#footer a{color:#fff;}
+#footer a:hover{color:#428bca;text-decoration: none;}
+
+/*公用样式*/
+
+.wtfradio li {float:left ;display: inline-block; font-weight: 700;color: #555;}
+
+
+
+
+
+

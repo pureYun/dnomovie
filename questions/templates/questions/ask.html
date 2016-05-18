@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load static %}
+{% block title %}问答园{% endblock %}
+
+{% block head %}
+     <link href="{% static 'css/questions.css' %}" rel="stylesheet">
+{% endblock %}
+{% block page_content %}
+    <div id="mainbody">
+    <div class="container">
+        <ol class="breadcrumb">
+    <li><a href="{% url 'questions' %}">{% trans "问答园" %}</a></li>
+    <li class="active">{% trans "提问" %}</li>
+            <a href="{% url 'questions' %}" class="btn btn-primary pull-right">
+               <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> {% trans "返回列表" %}
+            </a>
+  </ol>
+
+        <form action="{% url 'ask' %}" method="post" class="form-horizontal" role="form">
+    {% csrf_token %}
+    {% for field in form.visible_fields %}
+      <div class="form-group{% if field.errors %} has-error{% endif %}">
+        <label for="{{ field.label }}" class="col-sm-2 control-label">{{ field.label }}</label>
+        <div class="col-sm-10">
+          {% if field.label == '问题详细描述' %}
+            {% include 'markdown_editor.html' with textarea='id_description' %}
+          {% endif %}
+          {{ field }}
+          {% if field.help_text %}
+            <span class="help-block">{{ field.help_text }}</span>
+          {% endif %}
+          {% for error in field.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-large btn-primary">{% trans '提交问题' %}</button>
+        <a href="{% url 'questions' %}" class="btn btn-large btn-default">{% trans '取消提问' %}</a>
+      </div>
+    </div>
+  </form>
+
+    </div>
+    </div>
+    <!--主体内容结束-->
+
+{% endblock %}

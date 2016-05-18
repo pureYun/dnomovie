@@ -1,0 +1,71 @@
+{% extends 'webuser/person_home_page.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load static %}
+{% block title %}上传头像{% endblock %}
+{% block head %}
+  <link href="{% static 'css/jquery.Jcrop.min.css' %}" rel="stylesheet">
+  <script src="{% static 'js/jquery.Jcrop.min.js' %}"></script>
+  <script src="{% static 'js/picture.js' %}"></script>
+{% endblock %}
+
+
+{% block person_home_content %}
+    <div class="col-md-6 container">
+        <h3 class="page-header">上传头像</h3>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+      <h1 style="margin-top:0"><small>更改头像</small></h1>
+      <img src="{{user.webuser.get_picture}}" style="width:150px;border-radius:5px;margin-bottom:lem;">
+      <form enctype="multipart/form-data" method="post" action="{% url 'upload_picture'%}" id="picture-upload-form">
+        {% csrf_token%}
+        <input type="file" name="picture" style="display:none"><br>
+        <button type="button" class="btn btn-primary" id="btn-upload-picture">上传照片</button>
+      </form>
+      {% if uploaded_picture %}
+        <form method="post" action="{% url 'save_uploaded_picture' %}">
+          {%csrf_token%}
+          <div class="modal fade" id="modal-upload-picture">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title">'上传图片'</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="selected-picture">
+                    <p>首先裁剪图片，然后点击<strong>保存图片</strong>按钮</p>
+                    <img src="{{ MEDIA_URL }}webuser_pictures/{{ user.username }}_tmp.jpg?_={% now 'U' %}" id="crop-picture">
+                    <input type="hidden" id="x" name="x" />
+                    <input type="hidden" id="y" name="y" />
+                    <input type="hidden" id="w" name="w" />
+                    <input type="hidden" id="h" name="h" />
+                  </div>
+                  <script type="text/javascript">
+                    $(function () {
+                      $("#modal-upload-picture").modal();
+                      window.history.pushState("", "", "/settings/picture/");
+                    });
+                  </script>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                  <button type="submit" class="btn btn-primary">保存更改</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      {% endif %}
+
+
+
+        </div>
+{% endblock %}

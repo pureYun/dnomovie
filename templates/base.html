@@ -1,0 +1,130 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link rel="shortcut icon" href="{% static 'vimeo.ico' %}" type="image/x-icon">
+<link rel="icon" href="{% static 'vimeo.ico' %}" type="image/x-icon">
+    <title>{% block title %}基础页面{% endblock %}</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'css/reset.css' %}" rel="stylesheet">
+     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/common.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/person_home_info.css' %}" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <script src="{% static 'lib/jquery-2.1.1.min.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script src="{% static 'lib/holder.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/common.js' %}"></script>
+
+
+
+    {% block head %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+ {% csrf_token %}
+ <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-toggle="collapse" data-target="#responsive-navbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="" class="navbar-brand"><strong>nomovie</strong>.com</a>
+            </div>
+            <div class="collapse navbar-collapse" id="responsive-navbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="{% url 'getmovielist' %}">首页</a></li>
+                <li><a href="{% url 'getmovielist' %}">电影池</a></li>
+                <li><a href="">排行榜</a></li>
+                <li><a href="{% url 'questions' %}">问答园</a></li>
+                <li><a href="{% url 'webchat' %}">聊电影</a></li>
+            </ul>
+            <form action="{% url 'searchmovie' %}" class="navbar-form navbar-left">
+                <input type="text" placeholder="电影搜索" class="form-control movie-search" name="q">
+                <button type="submit">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </form>
+            <a href="http://127.0.0.1:8000" title="收藏网站" class="btn btn-primary btn-sm navbar-btn navbar-right hidden-xs" onclick="window.external.addFavorite(this.href,this.title);return false;" >收藏网站</a>
+            <div class="profile navbar-right">
+
+                <ul class="nav navbar-nav">
+                        {% if request.user.is_authenticated %}
+                        <li class="dropdown">
+                            <a href="{%url 'settings' %}" class="dropdown-toggle" data-toggle="dropdown">{{user.username}}<span class="caret"></span> </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{%url 'settings' %}" class="glyphicon glyphicon-user">个人中心</a> </li>
+                                <li><a href="{%url 'password' %}" class="glyphicon glyphicon-edit">修改密码</a> </li>
+                                <li><a href="{%url 'changeemail' %}" class="glyphicon glyphicon-th">修改邮箱</a> </li>
+                                <li><a href="{% url 'logout' %}" class="glyphicon glyphicon-off">退出登录</a> </li>
+                            </ul>
+                        </li>
+                        {% else %}
+                         <li><a href="{% url 'weblogin' %}" >登录</a></li>
+                        <li><a href="{% url 'register' %}">注册</a></li>
+                        {% endif %}
+                    </ul>
+            </div>
+
+        </div>
+        </div>
+    </nav>
+
+
+
+
+{% block content %}
+    <div class="container">
+
+
+
+    </div>
+    {% block slideshow%}{% endblock%}
+{% block page_content%}{% endblock %}
+
+<!--footer开始-->
+    <div id="footer">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8"> Copyright &copy; nomovie.com</div>
+            <div class="col-md-2">
+              <ul>
+                <li><a target="_blank"  href="">新浪微博</a></li>
+                <li><a target="_blank"  href="">腾讯微博</a></li>
+              </ul>
+            </div>
+            <div class="col-md-2">
+              <ul>
+                <li><a href="#">回到顶部</a></li>
+                <li><a href="#">联系我们</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!--footer结束 -->
+
+{% endblock %}
+
+
+
+
+{% block allfilms %}{% endblock %}
+{% block index%}{% endblock %}
+</body>
+</html>

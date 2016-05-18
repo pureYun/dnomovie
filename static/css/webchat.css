@@ -1,0 +1,20 @@
+.chat-content-div{
+    height:450px;
+    overflow:auto;
+    }
+.chat-box{
+    margin-top:10px;
+    }
+.contact-list-div{
+    height:490px;
+    overflow:auto;
+    }
+.contact-list-box{
+    margin-top:10px;
+    }
+.chat-header{
+    height:30px;
+    }
+.sent-message{
+    text-align:right;
+    }

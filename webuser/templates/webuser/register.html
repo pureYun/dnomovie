@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}NOMOVIE-Register {% endblock %}
+{% block page_content %}
+
+<div id="mainbody">
+         <div class="container">
+            <h1 class="page-header">注册</h1>
+             <div class="col-md-6">
+             <form role="form" class="registerForm" action="{% url 'register' %}" method="post" role="form">
+                  {% csrf_token %}
+                <fieldset>
+                    {% for field in form.visible_fields %}
+        <div class="form-group{% if field.errors %} has-error{% endif %}">
+          <label for="{{ field.label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <span class="help-block">{{ field.help_text|safe }}</span>
+          {% endif %}
+          {% for error in field.errors %}
+            <label class="control-label">{{ error }}</label>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+                </fieldset>
+
+        <div class="form-group">
+            <div  class="form-group-left">
+              <button type="submit" class="btn btn-large btn-primary">创建账户</button>
+
+              </div>
+          </div>
+             </form>
+                 </div>
+         </div>
+</div>
+{% endblock %}

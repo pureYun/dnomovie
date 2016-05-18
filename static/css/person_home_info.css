@@ -1,0 +1,7 @@
+//个人中心左侧菜单
+.list-group {border:none;}
+.list-group a{display:block}
+.list-group a:hover{background:#00b7ee;}
+label[for^='id'] {
+    font-weight:normal;
+}
