@@ -10,7 +10,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+#获得推荐电影列表和默认
 def getmovielist(request):
+    type = 'suggest'
     after_range_num =5
     before_range_num=4
     try:
@@ -64,6 +66,88 @@ def getmovielist(request):
     else:
         page_range = paginator.page_range[0:int(page)+before_range_num]
     return render(request,'movie/allfilms.html',locals())
+
+#获得最新的电影列表
+def getlatestmovielist(request):
+    type = 'latest'
+    after_range_num =5
+    before_range_num=4
+    try:
+        page=request.GET.get('page')
+        if page is not None:
+            page =int(page)
+        filtertype=request.GET.get('filtertype')
+        filterparam=request.GET.get('filterparam')
+        if page<1:
+            page=1
+    except ValueError:
+        page=1
+
+    if filtertype == 'style':
+        movie_list = Movie.objects.filter(style__contains=filterparam,movieaddress__isnull=False).order_by('-dateyear')
+    elif filtertype == 'area':
+        movie_list = Movie.objects.filter(country__contains=filterparam,movieaddress__isnull=False).order_by('-dateyear')
+    elif filtertype == 'year':
+        if filterparam=='20':
+            movie_list = Movie.objects.filter(dateyear__lte='2001-12-20',movieaddress__isnull=False).order_by('-dateyear')
+        else:
+            movie_list = Movie.objects.filter(dateyear__contains=filterparam,movieaddress__isnull=False).order_by('-dateyear')
+    else:
+        movie_list = Movie.objects.filter(movieaddress__isnull=False).order_by('-dateyear')
+    random_num = random.randint(0,99)
+    imdbmovie_list = Movie.objects.filter(movieaddress__isnull=False).order_by('doubanscore')[random_num:random_num+6]
+    usamovie_list = Movie.objects.filter(country__contains='美',movieaddress__isnull=False).order_by('doubanscore')[random_num:random_num+6]
+    paginator = Paginator(movie_list,12)
+    try:
+        movielist = paginator.page(page)
+    except(EmptyPage,InvalidPage,PageNotAnInteger):
+        movielist=paginator.page(1)
+    if page>=after_range_num:
+        page_range=paginator.page_range[page-after_range_num:page+before_range_num]
+    else:
+        page_range = paginator.page_range[0:int(page)+before_range_num]
+    return render(request,'movie/allfilms.html',locals())
+#参加电影节电影
+def getfilmfestlist(request):
+    type = 'festival'
+    after_range_num =5
+    before_range_num=4
+    try:
+        page=request.GET.get('page')
+        if page is not None:
+            page =int(page)
+        filtertype=request.GET.get('filtertype')
+        filterparam=request.GET.get('filterparam')
+        if page<1:
+            page=1
+    except ValueError:
+        page=1
+
+    if filtertype == 'style':
+        movie_list = Movie.objects.filter(style__contains=filterparam,movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
+    elif filtertype == 'area':
+        movie_list = Movie.objects.filter(country__contains=filterparam,movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
+    elif filtertype == 'year':
+        if filterparam=='20':
+            movie_list = Movie.objects.filter(dateyear__lte='2001-12-20',movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
+        else:
+            movie_list = Movie.objects.filter(movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
+    else:
+        movie_list = Movie.objects.filter(movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
+    random_num = random.randint(0,99)
+    imdbmovie_list = Movie.objects.filter(movieaddress__isnull=False).order_by('-doubanscore')[random_num:random_num+6]
+    usamovie_list = Movie.objects.filter(country__contains='美',movieaddress__isnull=False).order_by('-doubanscore')[random_num:random_num+6]
+    paginator = Paginator(movie_list,12)
+    try:
+        movielist = paginator.page(page)
+    except(EmptyPage,InvalidPage,PageNotAnInteger):
+        movielist=paginator.page(1)
+    if page>=after_range_num:
+        page_range=paginator.page_range[page-after_range_num:page+before_range_num]
+    else:
+        page_range = paginator.page_range[0:int(page)+before_range_num]
+    return render(request,'movie/allfilms.html',locals())
+
 
 def getmovielistbystyle(request,page=1):
     after_range_num =5
@@ -133,4 +217,5 @@ def addmovie(request):
     else:
         form = MovieInfoForm();
     return render(request,'webuser/addmovie.html',{'form':form})
+
 

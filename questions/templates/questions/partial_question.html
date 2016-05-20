@@ -21,8 +21,8 @@
       </div>
     </div>
     <div class="question-user">
-      <a href="#"><img src="{{ question.user.webuser.get_picture }}" class="img-circle" style='max-width:40px;'></a>
-      <a href="#" class="username">{{ question.user.webuser.get_screen_name }}</a>
+      <a href="{% url 'getuserinfo' question.user.id %}"><img src="{{ question.user.webuser.get_picture }}" class="img-circle" style='max-width:40px;'></a>
+      <a href="{% url 'getuserinfo' question.user.id %}" class="username">{{ question.user.webuser.get_screen_name }}</a>
       <span class="asked">在{{ question.update_date|naturaltime }}提问</span>
     </div>
     <div class="question-description">

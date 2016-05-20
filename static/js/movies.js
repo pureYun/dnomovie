@@ -35,6 +35,14 @@ $(function() {
             function(){
             $(this).find(".img_title").css("display","none").slideUp(2200);
             });//end post-thunbmal
+
+            //点击右上角收藏按钮
+            $(".havesee").click(function(){
+                alert("hahah")
+              $(this).parents("div .col-md-4").remove();
+
+            });//end havesee
+
         });
 
 

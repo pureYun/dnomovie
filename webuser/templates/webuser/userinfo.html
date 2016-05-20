@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load static %}
+{% block title %}个人主页{% endblock %}
+{% block head %}
+<link href="{% static 'css/user.css' %}" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+{% block page_content %}
+
+    <div id="mainbody">
+         <div class="container">
+            <small><h3 class="page-header" style="text-align:center;">个人主页</h3></small>
+             <div class="row">
+
+             <div class="col-md-4 col-sm-4 portrait">
+                <img src="{{user.webuser.get_picture}}" style="width:140px;height:140px;" class="img-responsive img-circle" alt="国民">
+            </div>
+
+             <div class="col-md-6 col-sm-6 userinfo">
+                    <h3>{{user.username}}</h3>
+                    <h3>{{user.webuser.url}}</h3>
+                  <h3>{{user.webuser.job_title}}</h3>
+            </div>
+
+             <div class="col-md-2 col-sm-2">
+                 <p><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-leaf">关注此人</span> </button></p>
+                 <p><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-plus">加为好友</span> </button></p>
+            </div>
+
+            </div>
+         </div>
+    </div>
+    <!--主体内容结束-->
+
+{% endblock %}

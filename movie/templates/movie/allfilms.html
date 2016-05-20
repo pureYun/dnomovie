@@ -81,9 +81,9 @@
                 <div class="col-md-8">
                     <div class="movieList">
                         <ul class="movieList_tab">
-                            <li class="current">推荐</li>
-                            <li>最新</li>
-                            <li>最热</li>
+                            <li role="presentation" {% if type == 'suggest' %} class="current" {% endif %}><a href="{% url 'getmovielist' %}" class="currentmovietype"> {% trans '推荐' %}</a></li>
+                            <li {% if type == 'festival'%} class="current" {% endif %} ><a href="{% url 'getfilmfestlist' %}" class="currentmovietype">电影节</a></li>
+                            <li {% if type == 'latest'%} class="current" {% endif %}><a href="{% url 'getlatestmovielist' %}" class="currentmovietype">最新</a></li>
                         </ul>
 
 

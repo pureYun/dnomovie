@@ -153,3 +153,7 @@ def save_uploaded_picture(request):
     except Exception,e:
         pass
     return redirect('/settings/picture')
+
+def getuserinfo(request,userinfoid):
+    user = User.objects.get(pk=userinfoid)
+    return render(request,'webuser/userinfo.html',{'user':user})

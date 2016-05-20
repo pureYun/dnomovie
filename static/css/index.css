@@ -116,8 +116,23 @@ img{
     }
 .havesee{
     position:absolute;
-    left:200px;
+    right:2px;
     cursor:pointer;
+    display:block;
     }
+.currentmovietype{
+    color:#333;
+    }
+.currentmovietype:hover{
+    text-decoration:none;
+    }
+.currentmovietype:active{
+    text-decoration:none;
+    }
+.currentmovietype:visited{
+    color:#fff;
+    text-decoration:none;
+    }
+
 
 
