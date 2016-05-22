@@ -5,9 +5,7 @@
 
 2.克隆完项目后，创建数据库，在setting.py中可以更改数据库地址;然后可以在数据库中执行：
   source /dnomoive/dnomovie.sql该命令，可以往数据库导入测试数据也可以用
-  python manage.py makemigrations来创建空数据库;或者连接我在阿里云上的数据库地址是：
-  121.42.156.185  root  root dnomovie
-
+  python manage.py makemigrations来创建空数据库;
 
 3.pip install -r /dnomovie/requirements.txt安装项目需要的库  有些库安装不上的话，建议
   翻墙，推荐lantern(翻墙利器)
