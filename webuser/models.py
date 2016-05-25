@@ -34,11 +34,11 @@ class Webuser(models.Model):
             if os.path.isfile(filename):
                 return picture_url
             else:
-                gravatar_url = u'http://www.gravatar.com/avatar/{0}?{1}'.format(
-                    hashlib.md5(self.user.email.lower()).hexdigest(),
-                    urllib.urlencode({'d':no_picture, 's':'256'})
-                    )
-
+                # gravatar_url = u'http://www.gravatar.com/avatar/{0}?{1}'.format(
+                #     hashlib.md5(self.user.email.lower()).hexdigest(),
+                #     urllib.urlencode({'d':no_picture, 's':'256'})
+                #     )
+                gravatar_url='http://localhost:8000/static/img/user1.png'
                 return gravatar_url
         except Exception, e:
             return no_picture

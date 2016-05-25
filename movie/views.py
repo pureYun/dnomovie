@@ -25,34 +25,30 @@ def getmovielist(request):
             page=1
     except ValueError:
         page=1
-
-    if filtertype == 'style':
-        if request.user.is_authenticated():
-            movie_list = Movie.objects.filter(style__contains=filterparam,movieaddress__isnull=False).exclude(id__in=MovieHistory.objects.filter(user=request.user).values_list('movie_id',flat=True)).order_by('-doubanscore','-doubancounter')
-        else:
-            movie_list = Movie.objects.filter(style__contains=filterparam,movieaddress__isnull=False).order_by('-doubanscore','-doubancounter')
-    elif filtertype == 'area':
-        if request.user.is_authenticated():
-            movie_list = Movie.objects.filter(country__contains=filterparam,movieaddress__isnull=False).exclude(id__in=MovieHistory.objects.filter(user=request.user).values_list('movie_id',flat=True)).order_by('-doubanscore','-doubancounter')
-        else:
-            movie_list = Movie.objects.filter(country__contains=filterparam,movieaddress__isnull=False).order_by('-doubanscore','-doubancounter')
-    elif filtertype == 'year':
-        if filterparam=='20':
-            if request.user.is_authenticated():
-                movie_list = Movie.objects.filter(dateyear__lte='2001-12-20',movieaddress__isnull=False).exclude(id__in=MovieHistory.objects.filter(user=request.user).values_list('movie_id',flat=True)).order_by('-doubanscore','-doubancounter')
+    moviequery = Movie.objects.filter(movieaddress__isnull=False,doubanscore__gte=7.5,doubancounter__gte=2000)
+    if request.user.is_authenticated():
+        moviequery = moviequery.exclude(id__in=MovieHistory.objects.filter(user=request.user).values_list('movie_id',flat=True))
+        movie_list = moviequery
+        if filtertype == 'style':
+            movie_list = moviequery.filter(style__contains=filterparam).order_by('-doubanscore','-doubancounter')
+        elif filtertype == 'area':
+            movie_list = moviequery.filter(country__contains=filterparam).order_by('-doubanscore','-doubancounter')
+        elif filtertype == 'year':
+            if filterparam=='20':
+                movie_list = moviequery.filter(dateyear__lte='2001-12-20').order_by('-doubanscore','-doubancounter')
             else:
-                movie_list = Movie.objects.filter(dateyear__lte='2001-12-20',movieaddress__isnull=False).order_by('-doubanscore','-doubancounter')
-        else:
-            if request.user.is_authenticated():
-                movie_list = Movie.objects.filter(dateyear__contains=filterparam,movieaddress__isnull=False).exclude(id__in=MovieHistory.objects.filter(user=request.user).values_list('movie_id',flat=True)).order_by('-doubanscore','-doubancounter')
-            else:
-                movie_list = Movie.objects.filter(dateyear__contains=filterparam,movieaddress__isnull=False).order_by('-doubanscore','-doubancounter')
-
+                movie_list = moviequery.filter(dateyear__contains=filterparam).order_by('-doubanscore','-doubancounter')
     else:
-        if request.user.is_authenticated():
-            movie_list = Movie.objects.filter(movieaddress__isnull=False).exclude(id__in=MovieHistory.objects.filter(user=request.user).values_list('movie_id',flat=True)).order_by('-id','-doubanscore')
-        else:
-            movie_list = Movie.objects.filter(movieaddress__isnull=False).order_by('-id','-doubanscore')
+        movie_list = moviequery
+        if filtertype == 'style':
+            movie_list = moviequery.filter(style__contains=filterparam).order_by('-doubanscore','-doubancounter')
+        elif filtertype == 'area':
+            movie_list = moviequery.filter(country__contains=filterparam).order_by('-doubanscore','-doubancounter')
+        elif filtertype == 'year':
+            if filterparam=='20':
+                movie_list = moviequery.filter(dateyear__lte='2001-12-20').order_by('-doubanscore','-doubancounter')
+            else:
+                movie_list = moviequery.filter(dateyear__contains=filterparam).order_by('-doubanscore','-doubancounter')
     random_num = random.randint(0,99)
     imdbmovie_list = Movie.objects.order_by('doubanscore')[random_num:random_num+6]
     usamovie_list = Movie.objects.filter(country__contains='美').order_by('doubanscore')[random_num:random_num+6]
@@ -122,18 +118,30 @@ def getfilmfestlist(request):
             page=1
     except ValueError:
         page=1
-
-    if filtertype == 'style':
-        movie_list = Movie.objects.filter(style__contains=filterparam,movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
-    elif filtertype == 'area':
-        movie_list = Movie.objects.filter(country__contains=filterparam,movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
-    elif filtertype == 'year':
-        if filterparam=='20':
-            movie_list = Movie.objects.filter(dateyear__lte='2001-12-20',movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
-        else:
-            movie_list = Movie.objects.filter(movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
+    moviequery = Movie.objects.filter(movieaddress__isnull=False,dateyear__contains=u'节')
+    if request.user.is_authenticated():
+        moviequery= moviequery.exclude(id__in=MovieHistory.objects.filter(user=request.user).values_list('movie_id',flat=True))
+        movie_list = moviequery
+        if filtertype == 'style':
+            movie_list = moviequery.filter(style__contains=filterparam).order_by('-doubanscore','-doubancounter')
+        elif filtertype == 'area':
+            movie_list = moviequery.filter(country__contains=filterparam).order_by('-doubanscore','-doubancounter')
+        elif filtertype == 'year':
+            if filterparam=='20':
+                movie_list = moviequery.filter(dateyear__lte='2001-12-20').order_by('-doubanscore','-doubancounter')
+            else:
+                movie_list = moviequery.filter(dateyear__contains=filterparam).order_by('-doubanscore','-doubancounter')
     else:
-        movie_list = Movie.objects.filter(movieaddress__isnull=False,dateyear__contains=u'节').order_by('-doubanscore')
+        movie_list = moviequery
+        if filtertype == 'style':
+            movie_list = moviequery.filter(style__contains=filterparam).order_by('-doubanscore','-doubancounter')
+        elif filtertype == 'area':
+            movie_list = moviequery.filter(country__contains=filterparam).order_by('-doubanscore','-doubancounter')
+        elif filtertype == 'year':
+            if filterparam=='20':
+                movie_list = moviequery.filter(dateyear__lte='2001-12-20').order_by('-doubanscore','-doubancounter')
+            else:
+                movie_list = moviequery.filter(dateyear__contains=filterparam).order_by('-doubanscore','-doubancounter')
     random_num = random.randint(0,99)
     imdbmovie_list = Movie.objects.filter(movieaddress__isnull=False).order_by('-doubanscore')[random_num:random_num+6]
     usamovie_list = Movie.objects.filter(country__contains='美',movieaddress__isnull=False).order_by('-doubanscore')[random_num:random_num+6]

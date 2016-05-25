@@ -5,6 +5,27 @@
 {% block title %}个人主页{% endblock %}
 {% block head %}
 <link href="{% static 'css/user.css' %}" rel="stylesheet" xmlns="http://www.w3.org/1999/html">
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".action").click(function(){
+                var friendid = $(this).attr('friendid');
+                var actiontype = $(this).attr('actiontype')
+                var friend_dic={
+                'friendid':friendid,
+                'actiontype':actiontype
+                }
+                console.log("actiontype:"+actiontype+friendid)
+            $.post("{% url 'addfriends'%}",{'data':JSON.stringify(friend_dic),'csrfmiddlewaretoken':GetCsrfToken()},function(callback){
+                console.log(callback)
+            });//post
+            $(this).addClass('disabled')
+            alert("他已经是你好友啦.......")
+            });//end click
+        });//end document ready
+ function GetCsrfToken(){
+    return $("input[name='csrfmiddlewaretoken']").val();
+    }
+    </script>
 {% endblock %}
 {% block page_content %}
 
@@ -12,7 +33,7 @@
          <div class="container">
             <small><h3 class="page-header" style="text-align:center;">个人主页</h3></small>
              <div class="row">
-
+                 {% csrf_token %}
              <div class="col-md-4 col-sm-4 portrait">
                 <img src="{{user.webuser.get_picture}}" style="width:140px;height:140px;" class="img-responsive img-circle" alt="国民">
             </div>
@@ -24,8 +45,8 @@
             </div>
 
              <div class="col-md-2 col-sm-2">
-                 <p><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-leaf">关注此人</span> </button></p>
-                 <p><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-plus">加为好友</span> </button></p>
+                 <p><button type="button" class="btn btn-primary action disabled" friendid="{{user.webuser.id}}" actiontype="view"><span class="glyphicon glyphicon-leaf">关注此人</span> </button></p>
+                 <p><button type="button" class="btn btn-danger action" friendid="{{user.webuser.id}}" actiontype="friend"><span class="glyphicon glyphicon-plus">加为好友</span> </button></p>
             </div>
 
             </div>

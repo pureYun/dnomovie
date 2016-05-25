@@ -1,5 +1,5 @@
 #-*- coding: UTF-8 -*-
-import os
+import os,json
 from django.shortcuts import render,render_to_response,redirect,get_object_or_404
 from django.http import HttpResponse
 from .forms import SignUpForm,LoginForm,ProfileForm,ChangePasswordForm,ChangeEmailForm
@@ -154,6 +154,24 @@ def save_uploaded_picture(request):
         pass
     return redirect('/settings/picture')
 
+#获得用户信息
+@login_required
 def getuserinfo(request,userinfoid):
     user = User.objects.get(pk=userinfoid)
     return render(request,'webuser/userinfo.html',{'user':user})
+
+#加为好友
+@login_required
+def addfriends(request):
+    if request.method=='POST':
+        data = json.loads(request.POST.get('data'))
+        friendid = data['friendid']
+        actiontype = data['actiontype']
+        print friendid,actiontype
+        if actiontype == u'friend':
+            webuser = request.user.webuser
+            friend = Webuser.objects.get(pk=friendid)
+            webuser.friends.add(friend)
+        return HttpResponse('success')
+    else:
+        return HttpResponse('error')

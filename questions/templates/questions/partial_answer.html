@@ -17,8 +17,8 @@
   </div>
   <div class="col-md-11">
     <div class="answer-user">
-      <a href="{% url 'getuserinfo' {{answer.user}} %}"><img src="{{ answer.user.webuser.get_picture }}" class="media-object img-circle" style='max-width:40px;'></a>
-      <a href="{% url 'getuserinfo' {{answer.user}} %}" class="username">{{ answer.user.webuser.get_screen_name }}</a>
+      <a href="{% url 'getuserinfo' answer.user.id %}"><img src="{{ answer.user.webuser.get_picture }}" class="media-object img-circle" style='max-width:40px;'></a>
+      <a href="{% url 'getuserinfo' answer.user.id %}" class="username">{{ answer.user.webuser.get_screen_name }}</a>
       <small class="answered">{% trans "在" %} {{ answer.create_date|naturaltime }}{% trans "回答" %}</small>
     </div>
     <div class="answer-description">
